@@ -1,9 +1,5 @@
 // PIE mini project 3 integration code 
-// Last edited 10.4.22
-
-// Include header files
-#include <Wire.h>
-#include <Adafruit_MotorShield.h>
+// Last edited 10.5.22
 
 enum states {
   _IDLE, // Pre/Post run state--change with key press?
@@ -11,6 +7,10 @@ enum states {
   };
   
 states current_state = _IDLE; 
+
+// Include header files
+#include <Wire.h>
+#include <Adafruit_MotorShield.h>
 
 float currentTime = 0;
 float pastTime = 0; 
@@ -21,7 +21,7 @@ float Kp = 0; // TBD--Proportional Term
 float Ki = 0; //TBD--Integral Term
 float Kd = 0; //TBD--Derivative Term
 
-// desired state
+// desired state -- difference of the readings of the two sensors wants to be zero
 float desiredSensorReading = 0; //TBD with calibration
 float pastSensorReading = 0; // Previous Sensor Reading
 
@@ -34,7 +34,7 @@ float derivative = 0; // rate of error
 float ctrl = 0;
 
 // motor variables
-int motorSpeed = 0;
+int initalMotorSpeed = 0; // TBD
 
 #define leftIR 0;
 #define rightIR 1;
@@ -47,15 +47,38 @@ Adafruit_MotorShield MS = Adafruit_MotorShield();
 Adafruit_DCMotor *LM = MS.getMotor(1);
 Adafruit_DCMotor *RM = MS.getMotor(2);
 
+float error = 0.0;
+float pidValue = 0.0;
+// Error finding function
+float findError() {
+  // when the robot is centered, both IR sensors should read 0
+
+  // if either of the IR sensors read 1 then whoops there's something wrong
+
+  // pseudocode because idk which pins the IR sensors are in
+
+  // get readings :)
+  // if left IR sensor reading == 1 and right IR sensor reading == 0
+  //    error = -1
+  // if left IR sensor reading == 0 and right IR sensor reading == 1
+  //    error = 1
+  // if left IR sensor reading == 0 and right IR sensor reading = 0
+  //    error = 0
+  // if both IR sensors reading == 1
+  //    error = 2.0
+
+  // return error
+  }
+
 // PID controller function
-float controller(float sensorReading) {
+float controller(float error) {
   
   // find elapsed time since last reading
   currentTime = millis();
   elapsedTime = currentTime - pastTime;
 
   // proportional
-  proportional = desiredSensorReading - sensorReading;
+  proportional = error;
   // Integration:
   integral = integral + (proportional * currentTime);
   // Derivative: 
@@ -67,9 +90,8 @@ float controller(float sensorReading) {
   pastError = proportional;
   pastTime = currentTime;
 
-  return ctrl;
+  return ctrl; 
   }
-
 
 void setup() {
   // put your setup code here, to run once:
@@ -89,17 +111,35 @@ void loop() {
     Kd = Serial.parseFloat()
     // since motorSpeed is an int, use serial.read
     // if you use Serial.parseFloat it won't save anything 
-    motorSpeed = Serial.read()
+    initalMotorSpeed = Serial.read()
     }
+
   // state machine
   switch(current_state)
   {
     case(_IDLE):
     // stop moving, wait for signal to start (button push?)
+    
       break;
     case(_MOVING):
     // moving, correcting position with controller. 
     // signal to end: sensing nothing??
+
+    // find error
+
+    // if we're horribly off course, stop
+    if error == 2.0 {
+      current_state = _IDLE;
+      break;
+      
+      }
+        
+    // find ctrl
+    pidValue = controller(error);
+    // calc motor speeds
+      
       break;
     }
+    
+
 }

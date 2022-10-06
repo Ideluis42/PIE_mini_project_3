@@ -36,8 +36,10 @@ float ctrl = 0;
 // motor variables
 int initalMotorSpeed = 0; // TBD
 
-#define leftIR 0;
-#define rightIR 1;
+int leftIR = 1
+int rightIR = 2;
+uint16_t leftIRread;
+uint16_t rightIRread;
 #define serialDelay 20;
 
 // define motor shield

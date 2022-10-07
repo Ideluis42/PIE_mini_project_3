@@ -11,8 +11,8 @@ uint16_t baud = 9600;
 char message[4];
 
 Adafruit_MotorShield MS = Adafruit_MotorShield();
-Adafruit_DCMotor *LM = MS.getMotor(1);
-Adafruit_DCMotor *RM = MS.getMotor(2);
+Adafruit_DCMotor *LM = MS.getMotor(3);
+Adafruit_DCMotor *RM = MS.getMotor(4);
 
 void setup() {
   // put your setup code here, to run once:
@@ -72,19 +72,19 @@ void loop() {
   }
   // Correct based on which IR sensor is on the line
   if(leftIRread == LOW && rightIRread == LOW){
-    LM->run(FORWARD);
+    LM->run(BACKWARD);
     RM->run(FORWARD); 
   }
   if(leftIRread == LOW && rightIRread == HIGH){
     LM->run(FORWARD);
-    RM->setSpeed(defSpeed-5);
-    RM->run(BACKWARD);
+    RM->setSpeed(defSpeed);
+    RM->run(FORWARD);
     RM->setSpeed(defSpeed);
   }
   if(leftIRread == HIGH && rightIRread == LOW){
     LM->run(BACKWARD);
-    LM->setSpeed(defSpeed-5);
-    RM->run(FORWARD);
+    LM->setSpeed(defSpeed);
+    RM->run(BACKWARD);
     LM->setSpeed(defSpeed);
   }
   // Stop because you've finished

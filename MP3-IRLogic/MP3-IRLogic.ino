@@ -50,13 +50,13 @@ void loop() {
   }
   if(leftIRread == LOW && rightIRread == HIGH){
     LM->run(FORWARD);
-    RM->setSpeed(defSpeed-5);
+    RM->setSpeed(defSpeed);
     RM->run(BACKWARD);
     RM->setSpeed(defSpeed);
   }
   if(leftIRread == HIGH && rightIRread == LOW){
     LM->run(BACKWARD);
-    LM->setSpeed(defSpeed-5);
+    LM->setSpeed(defSpeed);
     RM->run(FORWARD);
     LM->setSpeed(defSpeed);
   }
